@@ -1,0 +1,33 @@
+{
+  "name": "abase-db",
+  "version": "1.0.0",
+  "description": "A little experiment in defining models in Joi and creating PostgreSQL Tables",
+  "main": "lib/index.js",
+  "devDependencies": {
+    "goodparts": "^1.1.0",
+    "istanbul": "^0.4.5",
+    "pre-commit": "^1.1.3",
+    "tape": "^4.6.2"
+  },
+  "dependencies": {
+    "env2": "^2.1.1"
+  },
+  "scripts": {
+    "test": "tape ./test/**/*.test.js",
+    "lint": "node_modules/.bin/goodparts .",
+    "lint:fix": "node_modules/.bin/goodparts . --fix",
+    "cover": "node_modules/.bin/istanbul cover node_modules/.bin/tape  ./test/*.test.js",
+    "check-coverage": "node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
+    "start": "node lib/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dwyl/joi-postgresql.git"
+  },
+  "author": "@eliascodes && @jrans",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dwyl/joi-postgresql/issues"
+  },
+  "homepage": "https://github.com/dwyl/joi-postgresql#readme"
+}
