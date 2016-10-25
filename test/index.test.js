@@ -5,11 +5,11 @@ var Hapi = require('hapi');
 var path = require('path');
 var plugin = require('../lib/index.js');
 
-var server = new Hapi.Server();
-
-server.connection();
 
 test('Can register DB plugin with `schemaPath` option', function (t) {
+  var server = new Hapi.Server();
+
+  server.connection();
   server.register({
     register: plugin,
     options: {
@@ -44,12 +44,7 @@ test('Can register DB plugin with `schemaPath` option', function (t) {
     server.inject({ method: 'GET', url: '/' }, function (response) {
       t.equal(response.statusCode, 200, '200 OK Code');
       t.equal(response.payload, '', 'Empty (normal) response');
-      t.end();
+      server.endAbaseDb(t.end);
     });
   });
-});
-
-test('Teardown', function (t) {
-  server.endAbaseDb();
-  t.end();
 });
