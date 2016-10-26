@@ -6,8 +6,13 @@ var dbConn = require('./test_pg_client.js');
 var db = require('../lib/db_handlers.js');
 var schema = require('../example_schema.js');
 
-var client = dbConn.client;
-
+var multipleSchema = [{
+  table_name: 'table_1', // eslint-disable-line
+  fields: { field: { type: 'string', email: true } }
+}, {
+  table_name: 'table_2', // eslint-disable-line
+  fields: { field: { type: 'string', email: true } }
+}];
 
 var testInsert = {
   email: 'test@gmail.com',
@@ -16,17 +21,17 @@ var testInsert = {
 };
 var testTab = schema.table_name;
 
+var client = dbConn.client;
+
 test('init test client', function (t) {
   client.connect(function () {
-    client.query('DROP TABLE IF EXISTS ' + schema.table_name, t.end);
+    client.query('DROP TABLE IF EXISTS ' + schema.table_name);
+    client.query('DROP TABLE IF EXISTS table_1');
+    client.query('DROP TABLE IF EXISTS table_2', t.end);
   });
 });
 
 test('db.init', function (t) {
-  t.throws(
-    function () { db.init(client, { rubbish: 'schema' }) },
-    'error thrown when given when using invalid schema'
-  );
   db.init(client, schema)
     .then(function () { return client.query('SELECT * from user_data') })
     .then(function (res) {
@@ -38,6 +43,24 @@ test('db.init', function (t) {
       );
       t.end();
     })
+  ;
+});
+
+test('db.init multiple tables', function (t) {
+  function checkFieldExist (res) {
+    t.ok(
+      res.fields
+        .map(function (field) { return field.name })
+        .indexOf('field') > -1
+      , 'table created with a correct field'
+    );
+  }
+  db.init(client, multipleSchema)
+    .then(function () { return client.query('SELECT * from table_1') })
+    .then(checkFieldExist)
+    .then(function () { return client.query('SELECT * from table_2') })
+    .then(checkFieldExist)
+    .then(t.end)
   ;
 });
 

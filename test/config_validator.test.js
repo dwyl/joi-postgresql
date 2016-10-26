@@ -45,6 +45,21 @@ test('config validator', function (t) {
   t.end();
 });
 
+test('config validator, multiple tables', function (t) {
+  t.doesNotThrow(
+    validator([{
+      table_name: 'test', // eslint-disable-line
+      fields: { email: { type: 'string' } }
+    }, {
+      table_name: 'test_2', // eslint-disable-line
+      fields: { email: { type: 'string' } }
+    }]),
+    'handles multiple tables'
+  );
+
+  t.end();
+});
+
 test('dbNameRegEx', function (t) {
   t.ok(
     dbNameRegEx.exec('_a1pha_Numer1c'),
