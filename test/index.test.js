@@ -48,3 +48,16 @@ test('Can register DB plugin with `schemaPath` option', function (t) {
     });
   });
 });
+
+test('db handlers exposed', function (t) {
+  var handlers = Object.keys(plugin.handlers);
+  var wanted = ['insert', 'select', 'delete', 'update', 'init'];
+
+  t.ok(
+    wanted.reduce(function (truth, handler) {
+      return truth && handlers.indexOf(handler) > -1;
+    }, true),
+    'all handlers found: ' + wanted.join(', ')
+  );
+  t.end();
+});

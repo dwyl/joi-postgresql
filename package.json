@@ -1,6 +1,6 @@
 {
   "name": "abase-db",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A little experiment in defining models in Joi and creating PostgreSQL Tables",
   "main": "lib/index.js",
   "devDependencies": {
