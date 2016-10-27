@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  table_name: 'user_data', // eslint-disable-line
+  tableName: 'user_data',
   fields: {
     email: {
       type: 'string',

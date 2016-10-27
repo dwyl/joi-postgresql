@@ -7,10 +7,10 @@ var db = require('../lib/db_handlers.js');
 var schema = require('../example_schema.js');
 
 var multipleSchema = [{
-  table_name: 'table_1', // eslint-disable-line
+  tableName: 'table_1', // eslint-disable-line
   fields: { field: { type: 'string', email: true } }
 }, {
-  table_name: 'table_2', // eslint-disable-line
+  tableName: 'table_2', // eslint-disable-line
   fields: { field: { type: 'string', email: true } }
 }];
 
@@ -19,13 +19,13 @@ var testInsert = {
   dob: '2001-09-27',
   username: 'test'
 };
-var testTab = schema.table_name;
+var testTab = schema.tableName;
 
 var client = dbConn.client;
 
 test('init test client', function (t) {
   client.connect(function () {
-    client.query('DROP TABLE IF EXISTS ' + schema.table_name);
+    client.query('DROP TABLE IF EXISTS ' + schema.tableName);
     client.query('DROP TABLE IF EXISTS table_1');
     client.query('DROP TABLE IF EXISTS table_2', t.end);
   });
@@ -149,6 +149,31 @@ test('db.delete w db.select', function (t) {
     })
     .then(function (res) { t.equal(res.rows.length, 0, 'nothing left in db') })
     .catch(t.fail)
+  ;
+});
+
+test('db.flush all via config', function (t) {
+  t.plan(1);
+  db.init(client, schema, null)
+    .then(function () { return db.flush(client, schema) })
+    .then(function () { return client.query('SELECT * FROM ' + testTab + ';') })
+    .catch(function (err) { return t.ok(err, 'selectin flushed table errors') })
+  ;
+});
+
+test('db.flush all via options', function (t) {
+  t.plan(2);
+  db.init(client, multipleSchema, null)
+    .then(function () {
+      return db.flush(client, null, { tableName: 'table_2' });
+    })
+    .then(function () { return client.query('SELECT * FROM table_1;') })
+    .then(function (res) {
+      t.ok(res, 'table_1 remians');
+
+      return client.query('SELECT * FROM table_2;');
+    })
+    .catch(function (err) { return t.ok(err, 'selectin flushed table errors') })
   ;
 });
 

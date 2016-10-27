@@ -14,29 +14,29 @@ function validator (config) {
 test('config validator', function (t) {
   t.throws(
     validator({ fields: {} }),
-    'error if no table_name property'
+    'error if no tableName property'
   );
   t.throws(
-    validator({ table_name: 'test' }), // eslint-disable-line
+    validator({ tableName: 'test' }), // eslint-disable-line
     'error if no fields property'
   );
   t.throws(
     validator({
-      table_name: '2test', // eslint-disable-line
+      tableName: '2test',
       fields: {}
     }),
     'error if table name doesn\t pass db name regex'
   );
   t.throws(
     validator({
-      table_name: 'test', // eslint-disable-line
+      tableName: 'test',
       fields: { '2field': { type: 'string' } }
     }),
     'error if field name doesn\'t pass db name regex'
   );
   t.doesNotThrow(
     validator({
-      table_name: 'test', // eslint-disable-line
+      tableName: 'test',
       fields: { email: { type: 'string', unknown: 'allowed' } }
     }),
     'no error when extra options unknown'
@@ -48,10 +48,10 @@ test('config validator', function (t) {
 test('config validator, multiple tables', function (t) {
   t.doesNotThrow(
     validator([{
-      table_name: 'test', // eslint-disable-line
+      tableName: 'test',
       fields: { email: { type: 'string' } }
     }, {
-      table_name: 'test_2', // eslint-disable-line
+      tableName: 'test_2',
       fields: { email: { type: 'string' } }
     }]),
     'handles multiple tables'

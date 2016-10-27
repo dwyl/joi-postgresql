@@ -13,7 +13,7 @@ var testInsert = {
   dob: '2001-09-27',
   username: 'test'
 };
-var testTab = schema.table_name;
+var testTab = schema.tableName;
 
 test('instantiateDb gives obj w/ methods bound to pg.Pool to cb', function (t) {
   instantiateDb(pool, schema, function (err, db) {
