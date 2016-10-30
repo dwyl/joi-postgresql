@@ -61,3 +61,18 @@ test('db handlers exposed', function (t) {
   );
   t.end();
 });
+
+test('validate exposed', function (t) {
+  t.ok(
+    typeof plugin.validate === 'function',
+    'validate function given'
+  );
+  t.end();
+});
+
+test('createClient helper', function (t) {
+  var testClient = plugin.createClient(process.env.TEST_DATABASE_URL);
+
+  t.ok(testClient.connection, 'client object returned');
+  t.end();
+});
