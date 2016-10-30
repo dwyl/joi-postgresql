@@ -19,7 +19,7 @@ tape('::init - generate SQL to create a table if none exists', function (t) {
     query,
     'CREATE TABLE IF NOT EXISTS "user_data" ('
     + 'email VARCHAR(80), '
-    + 'username VARCHAR(20) CONSTRAINT username_unique UNIQUE, '
+    + 'username VARCHAR(20) CONSTRAINT user_data_username_unique UNIQUE, '
     + 'dob DATE'
     + ')',
     'Create table query generation from config object'
