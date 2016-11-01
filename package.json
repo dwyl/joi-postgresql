@@ -2,7 +2,7 @@
   "name": "abase-db",
   "version": "0.2.0",
   "description": "A little experiment in defining models in Joi and creating PostgreSQL Tables",
-  "main": "lib/index.js",
+  "main": "lib/",
   "devDependencies": {
     "goodparts": "^1.1.0",
     "istanbul": "^0.4.5",
@@ -17,12 +17,13 @@
     "pg": "^6.1.0"
   },
   "scripts": {
-    "test": "tape ./test/**/*.test.js",
+    "test": "tape './test/**/*.test.js'",
     "lint": "node_modules/.bin/goodparts .",
     "lint:fix": "node_modules/.bin/goodparts . --fix",
-    "cover": "node_modules/.bin/istanbul cover node_modules/.bin/tape  ./test/*.test.js",
+    "cover": "node_modules/.bin/istanbul cover node_modules/.bin/tape  './test/*.test.js'",
     "check-coverage": "node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
-    "start": "node lib/index.js"
+    "run:example": "node example/"
+
   },
   "repository": {
     "type": "git",
