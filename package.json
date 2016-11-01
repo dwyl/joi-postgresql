@@ -22,7 +22,7 @@
     "lint:fix": "node_modules/.bin/goodparts . --fix",
     "cover": "node_modules/.bin/istanbul cover node_modules/.bin/tape  './test/*.test.js'",
     "check-coverage": "node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
-    "run:example": "node example/"
+    "example": "node example/"
 
   },
   "repository": {
