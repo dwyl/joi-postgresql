@@ -67,7 +67,9 @@ test('db.init multiple tables', function (t) {
 
 test('db.insert & default select w custom where', function (t) {
   db.insert(client, schema, { fields: testInsert, tableName: testTab })
-    .then(function () {
+    .then(function (res) {
+      t.ok(res.rows[0].id, 'id returned in response');
+
       return db.select(client, schema, {
         where: { dob: '2001-09-27' },
         tableName: testTab

@@ -67,7 +67,7 @@ tape('::insert - generate SQL to insert a column into a table', function (t) {
 
   t.equal(
     query[0],
-    'INSERT INTO "user_data" (email) VALUES ($1)',
+    'INSERT INTO "user_data" (email) VALUES ($1) RETURNING ()',
     'Generate parameterised query'
   );
   t.deepEqual(
@@ -86,7 +86,7 @@ tape('::insert - generate SQL to insert blank col into table', function (t) {
 
   t.equal(
     query[0],
-    'INSERT INTO "user_data" () VALUES ()',
+    'INSERT INTO "user_data" () VALUES () RETURNING ()',
     'Generate query for blank line'
   );
   t.deepEqual(
