@@ -20,7 +20,8 @@ tape('::init - generate SQL to create a table if none exists', function (t) {
     'CREATE TABLE IF NOT EXISTS "user_data" ('
     + 'email VARCHAR(80), '
     + 'username VARCHAR(20) CONSTRAINT user_data_username_unique UNIQUE, '
-    + 'dob DATE'
+    + 'dob DATE, '
+    + 'id VARCHAR(36)'
     + ')',
     'Create table query generation from config object'
   );
@@ -28,7 +29,7 @@ tape('::init - generate SQL to create a table if none exists', function (t) {
 });
 
 tape('::select - generate SQL to select columns from a table', function (t) {
-  var query = sqlGen.select({
+  var query = sqlGen.select(null, {
     tableName: schema.tableName,
     select: ['email', 'dob']
   });
@@ -43,7 +44,7 @@ tape('::select - generate SQL to select columns from a table', function (t) {
 });
 
 tape('::select - gen. SQL to select cols from table w/ where', function (t) {
-  var query = sqlGen.select({
+  var query = sqlGen.select(null, {
     tableName: schema.tableName,
     select: ['email', 'dob'],
     where: { foo: 'bar' }
@@ -60,6 +61,7 @@ tape('::select - gen. SQL to select cols from table w/ where', function (t) {
 
 tape('::insert - generate SQL to insert a column into a table', function (t) {
   var query = sqlGen.insert(
+    { tableName: schema.tableName, fields: {} },
     { tableName: schema.tableName, fields: { email: 'me@poop.com' } }
   );
 
@@ -77,7 +79,10 @@ tape('::insert - generate SQL to insert a column into a table', function (t) {
 });
 
 tape('::insert - generate SQL to insert blank col into table', function (t) {
-  var query = sqlGen.insert({ tableName: schema.tableName });
+  var query = sqlGen.insert(
+    { tableName: schema.tableName, fields: {} },
+    { tableName: schema.tableName }
+  );
 
   t.equal(
     query[0],
@@ -93,7 +98,7 @@ tape('::insert - generate SQL to insert blank col into table', function (t) {
 });
 
 tape('::update - generate SQL to update a column in a table', function (t) {
-  var query = sqlGen.update({
+  var query = sqlGen.update(null, {
     tableName: schema.tableName,
     fields: { email: 'me@poop.com' }
   });
@@ -112,7 +117,7 @@ tape('::update - generate SQL to update a column in a table', function (t) {
 });
 
 tape('::update - generate SQL to update no fields of column', function (t) {
-  var query = sqlGen.update({ tableName: schema.tableName });
+  var query = sqlGen.update(null, { tableName: schema.tableName });
 
   t.equal(
     query[0],
@@ -128,7 +133,7 @@ tape('::update - generate SQL to update no fields of column', function (t) {
 });
 
 tape('::update - gen. SQL to update a col in table w/ where', function (t) {
-  var query = sqlGen.update({
+  var query = sqlGen.update(null, {
     tableName: schema.tableName,
     fields: { email: 'me@poop.com' },
     where: { foo: 'bar' }
@@ -148,7 +153,7 @@ tape('::update - gen. SQL to update a col in table w/ where', function (t) {
 });
 
 tape('::delete should generate SQL to delete a row from a table', function (t) {
-  var query = sqlGen.delete({
+  var query = sqlGen.delete(null, {
     tableName: schema.tableName,
     where: { username: 'bob' }
   });
@@ -167,7 +172,7 @@ tape('::delete should generate SQL to delete a row from a table', function (t) {
 });
 
 tape('::delete should gen SQL to delete row w/ multiple where', function (t) {
-  var query = sqlGen.delete({
+  var query = sqlGen.delete(null, {
     tableName: schema.tableName,
     where: { username: 'bob', dob: '20/04/1988' }
   });

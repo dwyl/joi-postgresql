@@ -3,8 +3,8 @@
 var test = require('tape');
 var Hapi = require('hapi');
 var path = require('path');
-var plugin = require('../lib/index.js');
 
+var plugin = require('../lib/index.js');
 
 test('Can register DB plugin with `schemaPath` option', function (t) {
   var server = new Hapi.Server();

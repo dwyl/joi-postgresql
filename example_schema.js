@@ -13,6 +13,7 @@ module.exports = {
       max: 20,
       unique: true
     },
-    dob: { type: 'date' }
+    dob: { type: 'date' },
+    id: { type: 'id' }
   }
 };

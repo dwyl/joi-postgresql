@@ -11,6 +11,7 @@
     "hapi": "^15.1.1"
   },
   "dependencies": {
+    "aguid": "^1.0.4",
     "env2": "^2.1.1",
     "hoek": "^4.1.0",
     "joi": "^9.0.4",
@@ -23,7 +24,6 @@
     "cover": "node_modules/.bin/istanbul cover node_modules/.bin/tape  './test/*.test.js'",
     "check-coverage": "node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
     "example": "node example/"
-
   },
   "repository": {
     "type": "git",
