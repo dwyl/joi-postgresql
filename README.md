@@ -90,7 +90,7 @@ The schema is in align with the requirements made by [abase]((https://github.com
 
 The schema must be an object (or an array of objects for multiple tables) of the form: `{ tableName, fields }`.
 
-`fields` is of the form `{ [afieldName]: { type, rest: optional }`
+`fields` is of the form `{ [fieldName]: { type, rest: optional }`
 
 Table and field names must be valid postgres table and column names. (non empty, alphanumeric, no leading number, less than 64)
 
@@ -102,6 +102,7 @@ Each field must be given a type prop. Data/joi types we support:
 | `number` | `DOUBLE PRECISION` or `BIGINT` | set `integer: true` for latter |
 | `string` | `VARCHAR(80 or max)` | `80` default, set `max: 123` as you like for more/less |
 |boolean | BOOLEAN | |
+| `id`  | VARCHAR(36) | **warning** if using this type do not add this field to your insert, we will generate an id on each insertion (Generated with [aguid](https://github.com/dwyl/aguid)) |
 
 More information can be inferred from `lib/config_validator.js`
 
@@ -110,6 +111,7 @@ Each field can also take more properties most of which will be used by other aba
 | Property | Notes |
 |---|---|
 | `unique` | set to `true` if you want column unique |
+| `primaryKey` | set to `true` if you want this field to act as your primary key (note only one field allowed!) |
 | `max`, `timestamp`, `integer` | see types table above for relevance |
 
 ##### Under the hood
