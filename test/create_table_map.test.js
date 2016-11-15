@@ -83,3 +83,12 @@ test('Create Table Mapper Function w/ unique option', function (t) {
   );
   t.end();
 });
+
+test('Create Table Mapper Function w/ primaryKey option', function (t) {
+  t.equal(
+    mapper('email', 'string', { primaryKey: true }, 'test_table'),
+    'email VARCHAR(80) CONSTRAINT test_table_pk PRIMARY KEY',
+    'pk constraint added to column'
+  );
+  t.end();
+});

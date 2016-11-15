@@ -38,6 +38,7 @@ test('db bound .insert adds to DB :: promise interface', function (t) {
         });
       })
       .then(function (result) {
+        t.equal(result.rows[0].id.length, 36, 'guid generated');
         t.equal(result.rows[0].email, testInsert.email, 'Email matches');
         t.end();
       })
