@@ -66,19 +66,6 @@ test('db bound .delete removes line from DB :: cb interface', function (t) {
   });
 });
 
-test('invalid args error for handler given to cb', function (t) {
-  instantiateDb(pool, schema, function (_, db) {
-    db.delete(
-      { tableName: testTab, where: 'Should not be a string' },
-      function (handlerError) {
-        t.ok(handlerError, 'callback given error from handler being abused');
-
-        t.end();
-      }
-    );
-  });
-});
-
 test('pool error', function (t) {
   t.plan(2);
 
@@ -95,6 +82,11 @@ test('pool error', function (t) {
       });
     });
   });
+});
+
+test(instantiateDb.fail, function (t) {
+  t.plan(1);
+  instantiateDb.fail(42, t.ok)('error');
 });
 
 // keep at bottom
