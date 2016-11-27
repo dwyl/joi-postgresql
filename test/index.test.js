@@ -29,6 +29,7 @@ test('Can register DB plugin with `schemaPath` option', function (t) {
         t.equal(typeof request.abase.db.select, 'function', 'bound select');
         t.equal(typeof request.abase.db.update, 'function', 'bound update');
         t.equal(typeof request.abase.db.delete, 'function', 'bound delete');
+        t.equal(typeof request.abase.db.query, 'function', 'bound delete');
 
         request.abase.db.select({})
           .then(function (result) {
@@ -51,7 +52,15 @@ test('Can register DB plugin with `schemaPath` option', function (t) {
 
 test('db handlers exposed', function (t) {
   var handlers = Object.keys(plugin.handlers);
-  var wanted = ['insert', 'select', 'delete', 'update', 'init', 'flush'];
+  var wanted = [
+    'insert',
+    'select',
+    'delete',
+    'update',
+    'init',
+    'flush',
+    'query'
+  ];
 
   t.ok(
     wanted.reduce(function (truth, handler) {

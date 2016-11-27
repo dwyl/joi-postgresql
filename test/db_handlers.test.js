@@ -179,6 +179,15 @@ test('db.flush all via options', function (t) {
   ;
 });
 
+test('db.query', function (t) {
+  t.plan(1);
+  db.query(client, null, { raw: 'SELECT 3 * 4;' })
+    .then(function (res) {
+      t.deepEqual(res.rows[0], { '?column?': 12 }, 'querying works');
+    })
+  ;
+});
+
 test('close test DB connections', function (t) {
   client.end(t.end);
 });
