@@ -31,6 +31,8 @@ test('Can register DB plugin with `schemaPath` option', function (t) {
         t.equal(typeof request.abase.db.delete, 'function', 'bound delete');
         t.equal(typeof request.abase.db.query, 'function', 'bound delete');
 
+        t.equal(typeof request.abase.db.pool, 'object', 'bound pool');
+
         request.abase.db.select({})
           .then(function (result) {
             t.equal(result.rows.length, 0, 'nothing in the DB');
