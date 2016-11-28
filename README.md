@@ -125,19 +125,28 @@ This will only therefore happen if starting server for the first time, or if a n
 
 ###### Request decoration
 
-Each request will have the db handlers `insert`, `select`, `update`, `delete`. They all have clients attached and ready to go.
+####### Handlers
+
+Each request will have the db handlers `insert`, `select`, `update`, `delete`, `query`. They all have clients attached and ready to go.
 
 They can be accessed like so: `request.abase.db.insert`.
 
 They are all of the form `function(options, callback = optional)` and return promises if no callback given.
 
-The `options` object must contain `tableName`, i.e. the table you want to operate on. Below are more details for properties of options.
+The `options` object must contain `tableName` for crud operation *if performing innerJoin not necessary*, i.e. the table you want to operate on. Below are more details for properties of options.
 
 | Property | Used in | Notes |
 | --- | --- | --- |
 | `fields` | `insert`, `update` | Object with field names and values corresponding to the schema provided |  
-| `select` | `select` | array of keys which want to be retrieved, if not present defaults to all columns |
-| `where` | `select`, `update`, `delete` | object with field names and values that must match by equality (would like inequality in future) |   
+| `select` | `select` | array of keys which want to be retrieved, if not present defaults to all columns, *note you can use `'name AS user_name'` to help with clashing column names in case of innerJoin*  |
+| `where` | `select`, `update`, `delete` | object with field names and values that must match by equality (would like inequalities in future) |
+| `innerJoin` | `select` | Allows you to perform an inner join on two tables based on two fields. pass an object of the form `{ table1, table2, column1, column2 }`   |
+
+The `query` handler takes options object of the form `{raw: 'SELECT * FROM your_raw_psql' }`.
+
+####### Pool
+
+You can also get the pool that the client uses by `db.pool`. You will be responsible for connecting and releasing clients. See details from [pg](https://github.com/brianc/node-pg-pool).
 
 ###### Server decoration
 
