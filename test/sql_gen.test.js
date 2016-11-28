@@ -59,7 +59,7 @@ tape('::select - gen. SQL to select cols from table w/ where', function (t) {
   t.end();
 });
 
-tape('::select - gen. SQL to select from join', function (t) {
+tape('::select - gen. SQL to select from inner join', function (t) {
   var query = sqlGen.select(null, {
     innerJoin: {
       table1: 'team',
@@ -72,6 +72,25 @@ tape('::select - gen. SQL to select from join', function (t) {
   t.equal(
     query[0],
     'SELECT * FROM "team" JOIN "player" ON "team"."id" = "player"."team_id"',
+    'Generate psql for JOIN'
+  );
+  t.end();
+});
+
+tape('::select - gen. SQL to select from left outer join', function (t) {
+  var query = sqlGen.select(null, {
+    leftOuterJoin: {
+      table1: 'team',
+      table2: 'player',
+      column1: 'id',
+      column2: 'team_id'
+    }
+  });
+
+  t.equal(
+    query[0],
+    'SELECT * FROM "team" LEFT OUTER JOIN'
+    + ' "player" ON "team"."id" = "player"."team_id"',
     'Generate psql for JOIN'
   );
   t.end();

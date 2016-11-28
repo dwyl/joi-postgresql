@@ -140,7 +140,7 @@ The `options` object must contain `tableName` for crud operation *if performing 
 | `fields` | `insert`, `update` | Object with field names and values corresponding to the schema provided |  
 | `select` | `select` | array of keys which want to be retrieved, if not present defaults to all columns, *note you can use `'name AS user_name'` to help with clashing column names in case of innerJoin*  |
 | `where` | `select`, `update`, `delete` | object with field names and values that must match by equality (would like inequalities in future) |
-| `innerJoin` | `select` | Allows you to perform an inner join on two tables based on two fields. pass an object of the form `{ table1, table2, column1, column2 }`   |
+| `innerJoin` or `leftOuterJoin` | `select` | Allows you to perform an joins of given type on two tables based on two fields. pass an object of the form `{ table1, table2, column1, column2 }`   |
 
 The `query` handler takes options object of the form `{raw: 'SELECT * FROM your_raw_psql' }`.
 
