@@ -77,6 +77,7 @@ tape('::select - gen. SQL to select from join', function (t) {
   t.end();
 });
 
+tape('::insert - generate SQL to insert row into table w id', function (t) {
   var query = sqlGen.insert(
     schema,
     { tableName: schema.tableName, fields: { email: 'me@poop.com' } }
@@ -213,7 +214,7 @@ tape('::dropTable should gen SQL to drop table', function (t) {
 
   t.equal(
     query,
-    'DROP TABLE "user_data";',
+    'DROP TABLE "user_data"',
     'Generate parameterised query'
   );
   t.end();

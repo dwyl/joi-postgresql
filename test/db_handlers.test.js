@@ -14,6 +14,14 @@ var multipleSchema = [{
   fields: { field: { type: 'string', email: true } }
 }];
 
+var joinSchema = [{
+  tableName: 'team',
+  fields: { id: { type: 'string' }, name: { type: 'string' } }
+}, {
+  tableName: 'player',
+  fields: { id: { type: 'string' }, team_id: { type: 'string' } }
+}];
+
 var testInsert = {
   email: 'test@gmail.com',
   dob: '2001-09-27',
@@ -26,6 +34,8 @@ var client = dbConn.client;
 test('init test client', function (t) {
   client.connect(function () {
     client.query('DROP TABLE IF EXISTS ' + schema.tableName);
+    client.query('DROP TABLE IF EXISTS team');
+    client.query('DROP TABLE IF EXISTS player');
     client.query('DROP TABLE IF EXISTS table_1');
     client.query('DROP TABLE IF EXISTS table_2', t.end);
   });
@@ -187,6 +197,79 @@ test('db.query', function (t) {
     })
   ;
 });
+
+
+test('db.select on join', function (t) {
+  db.init(client, joinSchema)
+    .then(function () {
+      return db.insert(
+        client,
+        joinSchema,
+        { tableName: 'team', fields: { id: 'teamA', name: 'Arsenal' } }
+      );
+    })
+    .then(function () {
+      return db.insert(
+        client,
+        joinSchema,
+        { tableName: 'team', fields: { id: 'teamB', name: 'Spurs' } }
+      );
+    })
+    .then(function () {
+      return db.insert(client, joinSchema, {
+        tableName: 'player',
+        fields: { team_id: 'teamA', id: 'playerA' }
+      });
+    })
+    .then(function () {
+      return db.insert(client, joinSchema, {
+        tableName: 'player',
+        fields: { team_id: 'teamB', id: 'playerB' }
+      });
+    })
+    .then(function () {
+      return db.select(client, joinSchema, {
+        innerJoin: {
+          table1: 'team',
+          table2: 'player',
+          column1: 'id',
+          column2: 'team_id'
+        }
+      });
+    })
+    .then(function (res) {
+      t.deepEqual(
+        res.rows,
+        [
+          { id: 'playerA', team_id: 'teamA', name: 'Arsenal' },
+          { id: 'playerB', team_id: 'teamB', name: 'Spurs' }
+        ]
+      );
+    })
+    .then(function () {
+      return db.select(client, joinSchema, {
+        select: ['team.id AS id_team', 'player.id AS id_player'],
+        innerJoin: {
+          table1: 'team',
+          table2: 'player',
+          column1: 'id',
+          column2: 'team_id'
+        }
+      });
+    })
+    .then(function (res) {
+      t.deepEqual(
+        res.rows,
+        [
+          { id_player: 'playerA', id_team: 'teamA' },
+          { id_player: 'playerB', id_team: 'teamB' }
+        ]
+      );
+    })
+    .then(t.end)
+  ;
+});
+
 
 test('close test DB connections', function (t) {
   client.end(t.end);
