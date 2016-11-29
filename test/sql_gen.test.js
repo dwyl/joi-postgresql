@@ -59,22 +59,60 @@ tape('::select - gen. SQL to select cols from table w/ where', function (t) {
   t.end();
 });
 
-tape('::insert - generate SQL to insert a column into a table', function (t) {
+tape('::select - gen. SQL to select from inner join', function (t) {
+  var query = sqlGen.select(null, {
+    innerJoin: {
+      table1: 'team',
+      table2: 'player',
+      column1: 'id',
+      column2: 'team_id'
+    }
+  });
+
+  t.equal(
+    query[0],
+    'SELECT * FROM "team" JOIN "player" ON "team"."id" = "player"."team_id"',
+    'Generate psql for JOIN'
+  );
+  t.end();
+});
+
+tape('::select - gen. SQL to select from left outer join', function (t) {
+  var query = sqlGen.select(null, {
+    leftOuterJoin: {
+      table1: 'team',
+      table2: 'player',
+      column1: 'id',
+      column2: 'team_id'
+    }
+  });
+
+  t.equal(
+    query[0],
+    'SELECT * FROM "team" LEFT OUTER JOIN'
+    + ' "player" ON "team"."id" = "player"."team_id"',
+    'Generate psql for JOIN'
+  );
+  t.end();
+});
+
+tape('::insert - generate SQL to insert row into table w id', function (t) {
   var query = sqlGen.insert(
-    { tableName: schema.tableName, fields: {} },
+    schema,
     { tableName: schema.tableName, fields: { email: 'me@poop.com' } }
   );
 
   t.equal(
     query[0],
-    'INSERT INTO "user_data" (email) VALUES ($1) RETURNING ()',
+    'INSERT INTO "user_data" (email, id) VALUES ($1, $2) RETURNING (id)',
     'Generate parameterised query'
   );
   t.deepEqual(
-    query[1],
-    ['me@poop.com'],
+    query[1][0],
+    'me@poop.com',
     'Generate values for parameterised query'
   );
+  t.ok(query[1][1], 'Id generated');
   t.end();
 });
 
@@ -86,7 +124,7 @@ tape('::insert - generate SQL to insert blank col into table', function (t) {
 
   t.equal(
     query[0],
-    'INSERT INTO "user_data" () VALUES () RETURNING ()',
+    'INSERT INTO "user_data" () VALUES ()',
     'Generate query for blank line'
   );
   t.deepEqual(
@@ -195,7 +233,7 @@ tape('::dropTable should gen SQL to drop table', function (t) {
 
   t.equal(
     query,
-    'DROP TABLE "user_data";',
+    'DROP TABLE "user_data"',
     'Generate parameterised query'
   );
   t.end();

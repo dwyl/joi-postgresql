@@ -24,6 +24,8 @@ test('instantiateDb gives obj w/ methods bound to pg.Pool to cb', function (t) {
     t.equal(typeof db.update, 'function', '.update method exists');
     t.equal(typeof db.select, 'function', '.select method exists');
     t.equal(typeof db.delete, 'function', '.delete method exists');
+    t.equal(typeof db.query, 'function', '.delete method exists');
+    t.equal(typeof db.pool, 'object', '.delete method exists');
     t.end();
   });
 });
