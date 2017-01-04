@@ -49,3 +49,35 @@ test('::shallowCopy', function (t) {
 
   t.end();
 });
+
+test('::nestedValues', function (t) {
+  var obj = {
+    a: ['d', 'e'],
+    b: 'f',
+    c: ['g', 'h', 'i']
+  };
+  var values = _.nestedValues(obj);
+
+  t.deepEqual(values, ['d', 'e', 'f', 'g', 'h', 'i'], 'gets values from arrays');
+
+  t.end();
+});
+
+test('::nestedValues with objects', function (t) {
+  var obj = {
+    a: {
+      b: ['h', 'i'],
+      c: {
+        d: 'j',
+        e: ['k', 'l']
+      }
+    },
+    f: ['m'],
+    g: 'n'
+  };
+  var values = _.nestedValues(obj);
+
+  t.deepEqual(values, ['h', 'i', 'j', 'k', 'l', 'm', 'n'], 'gets values from arrays and objects');
+
+  t.end();
+});
