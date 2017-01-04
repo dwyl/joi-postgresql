@@ -29,6 +29,15 @@ test('Date type', function (t) {
   t.end();
 });
 
+test('Time type', function (t) {
+  t.equal(
+    mapObj.time(),
+    'TIMESTAMP',
+    'time type: default'
+  );
+  t.end();
+});
+
 test('Number type', function (t) {
   t.equal(
     mapObj.number({}),
