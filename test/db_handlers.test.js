@@ -22,6 +22,11 @@ var joinSchema = [{
   fields: { id: { type: 'string' }, team_id: { type: 'string' } }
 }];
 
+var whereSchema ={
+  tableName: 'animals',
+  fields: { name: { type: 'string' }, legs: { type: 'number' } }
+}
+
 var testInsert = {
   email: 'test@gmail.com',
   dob: '2001-09-27',
@@ -36,6 +41,7 @@ test('init test client', function (t) {
     client.query('DROP TABLE IF EXISTS ' + schema.tableName);
     client.query('DROP TABLE IF EXISTS team');
     client.query('DROP TABLE IF EXISTS player');
+    client.query('DROP TABLE IF EXISTS animals');
     client.query('DROP TABLE IF EXISTS table_1');
     client.query('DROP TABLE IF EXISTS table_2', t.end);
   });
@@ -267,6 +273,81 @@ test('db.select on join', function (t) {
       );
     })
     .then(t.end)
+  ;
+});
+
+test('db.select with where/or', function (t) {
+  db.init(client, whereSchema)
+    .then(function () {
+      return db.insert(
+        client,
+        whereSchema,
+        { tableName: 'animals', fields: { name: 'cat', legs: 4 } }
+      );
+    })
+    .then(function () {
+      return db.insert(
+        client,
+        whereSchema,
+        { tableName: 'animals', fields: { name: 'dog', legs: 4 } }
+      );
+    })
+    .then(function () {
+      return db.insert(
+        client,
+        whereSchema,
+        { tableName: 'animals', fields: { name: 'fish', legs: 0 } }
+      );
+    })
+    .then(function () {
+      return db.insert(
+        client,
+        whereSchema,
+        { tableName: 'animals', fields: { name: 'human', legs: 2 } }
+      );
+    })
+    .then(function () {
+      return db.select(client, whereSchema, {
+        tableName: 'animals',
+        where: {
+          or: {
+            legs: [2, 4]
+          }
+        }
+      });
+    })
+    .then(function (res) {
+      t.deepEqual(
+        res.rows,
+        [
+          { name: 'cat', legs: 4 },
+          { name: 'dog', legs: 4 },
+          { name: 'human', legs: 2 }
+        ]
+      );
+    })
+    .then(function () {
+      return db.select(client, whereSchema, {
+        tableName: 'animals',
+        where: {
+          or: {
+            legs: 2,
+            name: 'cat'
+          }
+        }
+      });
+    })
+    .then(function (res) {
+      t.deepEqual(
+        res.rows,
+        [
+          { name: 'cat', legs: 4 },
+          { name: 'human', legs: 2 }
+        ]
+      );
+    })
+    .then(t.end)
+    .catch(function (err) { return t.fail(err) })
   ;
 });
 

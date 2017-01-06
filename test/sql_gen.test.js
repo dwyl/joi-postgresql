@@ -59,6 +59,38 @@ tape('::select - gen. SQL to select cols from table w/ where', function (t) {
   t.end();
 });
 
+tape('::select - SQL to select w/ where and OR', function (t) {
+  var query = sqlGen.select(null, {
+    tableName: schema.tableName,
+    select: ['email', 'dob'],
+    where: { or: { hello: ['world', 'there'], name: 'john' } }
+  });
+
+  t.equal(
+    query[0],
+    'SELECT email, dob FROM "user_data" WHERE (hello=$1 OR hello=$2 OR name=$3)',
+    'Generate parameterised query'
+  );
+  t.deepEqual(query[1], ['world', 'there', 'john'], 'Generate values for parameterised query');
+  t.end();
+});
+
+tape('::select - SQL to select w/ where, AND and OR', function (t) {
+  var query = sqlGen.select(null, {
+    tableName: schema.tableName,
+    select: ['email', 'dob'],
+    where: { foo: 'bar', or: { hello: ['world', 'there'] } }
+  });
+
+  t.equal(
+    query[0],
+    'SELECT email, dob FROM "user_data" WHERE foo=$1 AND (hello=$2 OR hello=$3)',
+    'Generate parameterised query'
+  );
+  t.deepEqual(query[1], ['bar', 'world', 'there'], 'Generate values for parameterised query');
+  t.end();
+});
+
 tape('::select - gen. SQL to select from inner join', function (t) {
   var query = sqlGen.select(null, {
     innerJoin: {
